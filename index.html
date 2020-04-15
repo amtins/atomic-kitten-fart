@@ -8,13 +8,22 @@
 
     <style>
         body {
+            background: #222;
+
             display: flex;
             flex-direction: column;
             align-items: center;
+
+            color: #eee;
+            font-family: Courier New;
         }
 
         video,
-        div {
+        div,
+        span,
+        article,
+        code,
+        img {
             width: 640px;
         }
 
@@ -24,6 +33,25 @@
             padding: 10px;
             box-sizing: border-box;
             overflow: auto;
+        }
+
+        span {
+            font-size: 50px;
+            box-sizing: border-box;
+            position: absolute;
+            padding: 10px;
+        }
+
+        li {
+            margin: 15px 0;
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        img {
+            margin-top: 10px;
         }
     </style>
 
@@ -35,7 +63,137 @@
 <body>
     <video controls muted poster="https://www.swissinfo.ch/srgscalableimage/40585002/scale/width/700"
         src="https://media.swissinfo.ch/videos/2017/10/16/40584942_SexworkersEducation_en-40584942-720k.mp4"></video>
+    <span>🐈</span>
     <div></div>
+    <article>
+        <h1>[Use case 1] Both libraries loaded</h1>
+        <ol>
+            <li>
+                Open the developer console and select the network tab.
+            </li>
+            <li>
+                In the network tab filter all request that contain <i>wt?</i>.
+            </li>
+            <li>
+                Reload the page. In the network tab the first <i>wt?</i> displayed comes from <i>tc_SRGGD_31-12.04</i> script.
+            </li>
+            <li>Click on play, playback starts.
+                The console above shows only one play event triggered.
+                The kitten state is 🐈💨.</li>
+
+            <li>Click on pause, playback pauses.
+                The console above shows only one pause event triggered.
+                The kitten state is 🐈.</li>
+
+            <li>Click on play, then seek few seconds.
+                The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek.
+                When the seek is finished a play (🐈💨) event is triggered.
+                <i>Note that this is the native behavior of the HTML5 player.</i></li>
+        </ol>
+
+        <p>
+            We can see the difference between the custom console and the network tab.
+            On the custom console, the events are triggered once per event type, while in the network tab, they are
+            triggered at least twice per event type.
+            This is no bueno. 🤔
+            <br>
+
+            <img src="https://thumbs.gfycat.com/BlaringGenuineHawaiianmonkseal-small.gif" alt="Not Approved">
+        </p>
+    </article>
+
+    <article>
+        <h1>[Use case 2] Only tc_SRGGD_11 library</h1>
+        <ol>
+            <li>
+                Open the developer console and select the network tab.
+            </li>
+            <li>
+                In the network tab, block the url <i>https://www.srf.ch/play/v3/js/tc_SRGGD_31-12.04.js</i>
+            </li>
+            <li>
+                In the network tab filter all request that contain <i>wt?</i>
+            </li>
+            <li>Click on play, playback starts.
+                The console above shows only one play event triggered.
+                The kitten state is 🐈💨.</li>
+
+            <li>Click on pause, playback pauses.
+                The console above shows only one pause event triggered.
+                The kitten state is 🐈.</li>
+
+            <li>Click on play, then seek few seconds.
+                The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek.
+                When the seek is finished a play (🐈💨) event is triggered.
+                <i>Note that this is the native behavior of the HTML5 player.</i></li>
+        </ol>
+
+        <p>
+            We can see the events are triggered correctly.
+            This is bueno. 👌
+            <br>
+            <img src="https://www.unibetcommunity.com/t5/image/serverpage/image-id/10103i9559312C52D1369D?v=1.0" alt="Approved">
+        </p>
+    </article>
+
+    <article>
+        <h1>tc_events_11 with custom log</h1>
+        <code><pre>
+function tc_events_11(tc_elt, tc_id_event, tc_array_events) {
+    tc_array_events["id"] = tc_id_event;
+    
+    if(['play','pause'].includes(tc_array_events["event_id"])){
+        log(`TC ${tc_array_events["event_id"]}`, 0);
+    }
+    
+
+    (function () {
+        var l = 'event_type|event_name|event_source|event_value|media_position_real|media_time_spent|event_value_1|event_value_2|event_value_3|event_value_4|event_value_5|event_id|media_subtitles_on|media_timeshift|media_quality|media_camera_angle_name|media_bandwidth|media_volume|media_mute|media_position|media_is_dvr|media_dvr_window_offset|media_dvr_window_length|media_is_live|media_stream_type|id'.split('|');
+        for (var k in l) {
+            if (!tc_array_events.hasOwnProperty(l[k])) { tc_array_events[l[k]] = ''; }
+        }
+    })();
+    if (tc_array_events["event_id"] == 'play') { if (tc_vars["media_urn"] != '') { tC.launchTag('eplay', 'play', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], "mg1=" + tc_vars["media_segment"] + ";mg2=" + tc_vars["media_bu_distributer"] + ";mg3=" + tc_vars["media_segment_id"] + ";mg4=" + tc_vars["media_special"] + ";mg5=" + tc_vars["media_episode_id"] + ";mg6=" + tc_vars["media_episode"] + ";mg7=" + tc_vars["media_show_id"] + ";mg8=" + tc_vars["media_show"] + ";mg9=" + tc_vars["media_channel_id"] + ";mg10=" + tc_vars["media_channel_name"] + ";mg11=" + tc_vars["media_tv_id"] + ";mg12=" + tc_vars["media_publication_datetime"] + ";mg13=" + tc_vars["media_is_geoblocked"] + ";mg14=" + tc_vars["media_url"] + ";mg15=" + tc_vars["media_thumbnail"] + ";mg16=" + tc_vars["media_type"] + ";mg17=" + tc_vars["media_episode_length"] + ";mg18=" + tc_vars["media_is_livestream"] + ";mg19=" + tc_vars["media_segment_length"] + ";mg20=" + tc_vars["media_full_length"] + ";mg21=" + tc_vars["media_is_web_only"] + ";mg22=" + tc_vars["media_joker1"] + ";mg23=" + tc_vars["media_joker2"] + ";mg24=" + tc_vars["media_joker3"] + ";mg25=" + tc_vars["media_livestream_encoder"] + ";ck1=" + tc_vars["media_episode"] + ";ck2=" + tc_vars["media_show"] + ";ck3=" + tc_vars["media_segment"] + ";ck5=" + tc_vars["media_chromecast_selected"] + ";ck7=" + tc_vars["media_content_group"] + ";ck6=" + tc_vars["media_bu_distributer"] + ";ck8=" + tc_vars["media_episode_id"] + ";ck11=" + tc_vars["navigation_app_site_name"] + ";ck12=" + tc_vars["media_embedding_content_page_type"] + ";ck13=" + tc_vars["media_embedding_referrer"] + ";ck14=" + tC.internalvars.tc_referrer + ";ck15=" + tc_vars["media_embedding_environment"] + ";ck16=" + tc_vars["media_language"] + ";ck17=" + tc_vars["media_publication_date"] + ";ck18=" + tc_vars["media_publication_time"] + ";ck21=" + tc_vars["media_assigned_tags"] + ";ck22=" + tc_vars["media_is_tvsvizzera"] + ";ck23=" + tc_vars["media_player_name"] + ";ck24=" + tc_array_events["media_subtitles_on"] + ";ck25=" + tc_array_events["media_timeshift"] + ";ck26=" + tc_vars["media_camera_angle_name"] + ";ck27=" + tc_vars["media_special_format"] + ";ck28=" + tc_vars["media_player_version"] + ";ck29=" + tc_vars["media_player_display"] + ";ck30=" + tc_vars["media_streaming_quality"] + ";ck34=" + tc_vars["media_is_livestream"] + ";ck19=" + tc_vars["media_since_publication_d"] + ";ck20=" + tc_vars["media_since_publication_h"], tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'pause') { tC.launchTag('epause', 'pause', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'stop') { tC.launchTag('estop', 'stop', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'pos') { tC.launchTag('epos', 'pos', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'seek') { tC.launchTag('eseek', 'seek', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_array_events["event_id"] == 'eof') { if (tc_vars["media_urn"] != '') { tC.launchTag('eeof', 'eof', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'uptime') { tC.launchTag('euptime', 'uptime', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '*null', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'segment') { tC.launchTag('e22', 'segment', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], "mg1=" + tc_vars["media_segment"] + ";mg2=" + tc_vars["media_bu_owner"] + ";mg3=" + tc_vars["media_segment_id"] + ";mg4=" + tc_vars["media_special"] + ";mg5=" + tc_vars["media_episode_id"] + ";mg6=" + tc_vars["media_episode"] + ";mg7=" + tc_vars["media_show_id"] + ";mg8=" + tc_vars["media_show"] + ";mg9=" + tc_vars["media_channel_id"] + ";mg10=" + tc_vars["media_channel_name"] + ";mg11=" + tc_vars["media_tv_id"] + ";mg12=" + tc_vars["media_publication_datetime"] + ";mg13=" + tc_vars["media_is_geoblocked"] + ";mg14=" + tc_vars["media_url"] + ";mg15=" + tc_vars["media_thumbnail"] + ";mg16=" + tc_vars["media_type"] + ";mg17=" + tc_vars["media_episode_length"] + ";mg18=" + tc_vars["media_is_livestream"] + ";mg19=" + tc_vars["media_segment_length"] + ";mg20=" + tc_vars["media_full_length"] + ";mg21=" + tc_vars["media_is_web_only"] + ";mg22=" + tc_vars["media_joker1"] + ";mg23=" + tc_vars["media_joker2"] + ";mg24=" + tc_vars["media_joker3"] + ";mg25=" + tc_vars["media_livestream_encoder"] + ";ck1=" + tc_vars["media_episode"] + ";ck2=" + tc_vars["media_show"] + ";ck3=" + tc_vars["media_segment"] + ";ck7=" + tc_vars["media_content_group"] + ";ck6=" + tc_vars["media_bu_owner"] + ";ck8=" + tc_vars["media_episode_id"] + ";ck11=" + tc_vars["navigation_app_site_name"] + ";ck12=" + tc_vars["media_embedding_content_page_type"] + ";ck13=" + tc_vars["media_embedding_referrer"] + ";ck14=" + tC.internalvars.tc_referrer + ";ck15=" + tc_vars["media_embedding_environment"] + ";ck16=" + tc_vars["media_language"] + ";ck17=" + tc_vars["media_publication_date"] + ";ck18=" + tc_vars["media_publication_time"] + ";ck21=" + tc_vars["media_assigned_tags"] + ";ck22=" + tc_vars["media_is_tvsvizzera"] + ";ck23=" + tc_vars["media_player_name"] + ";ck24=" + tc_array_events["media_subtitles_on"] + ";ck25=" + tc_array_events["media_timeshift"] + ";ck26=" + tc_array_events["media_camera_angle_name"] + ";ck27=" + tc_vars["media_special_format"] + ";ck28=" + tc_vars["media_player_version"] + ";ck29=" + tc_vars["media_player_display"] + ";ck30=" + tc_vars["media_streaming_quality"] + ";ck19=" + tc_vars["media_since_publication_d"] + ";ck20=" + tc_vars["media_since_publication_h"], tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') {
+        if (tc_array_events["event_id"] == 'play') {
+            if (tc_vars["media_urn"] != '') {
+                tC.launchTag('eplay', 'ComScore notifyPlay', '-1', '3666', '11'); if ('streamingAnalytics' in window && tC.internalvars.isNotMutedPlayback && tC.internalvars.VideojsIsNotAutoplay) {
+                    if (tc_array_events["media_is_dvr"]) { streamingAnalytics.setDvrWindowLength(tc_array_events["media_dvr_window_length"]); streamingAnalytics.setDvrWindowOffset(tc_array_events["media_dvr_window_offset"]); }
+                    if (tc_array_events["media_is_live"]) { streamingAnalytics.notifyPlay(); } else { streamingAnalytics.notifyPlay(tc_array_events["media_position"] * 1000); }
+                }
+            }
+        }
+    }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'buffer_start') { tC.launchTag('ebuffer_start', 'comScore - notifyBufferStart', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.notifyBufferStart(); } } } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'buffer_stop') { tC.launchTag('ebuffer_stop', 'comScore - notifyBufferStop', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.notifyBufferStop(); } } } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_array_events["event_id"] == 'seek') { if (tc_vars["media_urn"] != '') { tC.launchTag('eseek', 'comScore - notifySeekStart', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.notifySeekStart(); if (tc_array_events["media_is_dvr"]) { streamingAnalytics.setDvrWindowLength(tc_array_events["media_dvr_window_length"]); streamingAnalytics.setDvrWindowOffset(tc_array_events["media_dvr_window_offset"]); } } } } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_array_events["event_id"] == 'pause') { if (tc_vars["media_urn"] != '') { tC.launchTag('epause', 'comScore - notifyPause', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.notifyPause(); if ('media_is_dvr') { streamingAnalytics.setDvrWindowLength(tc_array_events["media_dvr_window_length"]); streamingAnalytics.setDvrWindowOffset(tc_array_events["media_dvr_window_offset"]); } } } } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_array_events["event_id"] == 'eof') { if (tc_vars["media_urn"] != '') { tC.launchTag('eeof', 'comScore - notifyEnd', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.notifyEnd(); } } } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { if (tc_vars["media_urn"] != '') { if (tc_array_events["event_id"] == 'init' || tc_array_events["event_id"] == 'eof' || tc_array_events["event_id"] == 'stop') { tC.launchTag('einit', 'comScore - setAsset Content Video Metrix', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.createPlaybackSession(); streamingAnalytics.getPlaybackSession().setAsset({ c2: '6036016', c3: 'srg', c4: tc_vars["media_bu_owner"], c6: '', ns_st_ad: '*null', ns_st_ce: tC.internalvars.ns_st_ce, ns_st_ci: tC.internalvars.ns_st_ci, ns_st_cl: tC.internalvars.ns_st_cl * 1000, ns_st_ct: tC.internalvars.media_duration_cs, ns_st_ddt: tC.internalvars.ns_st_ddt, ns_st_en: tC.internalvars.ns_st_en, ns_st_ep: tC.internalvars.ns_st_ep, ns_st_ft: '*null', ns_st_ge: tC.internalvars.ns_st_ge, ns_st_ia: '*null', ns_st_pn: '1', ns_st_pr: tC.internalvars.ns_st_pr, ns_st_pu: 'SRG', ns_st_sn: '*null', ns_st_st: tc_vars["media_channel_name"], ns_st_stc: tC.internalvars.ns_st_stc, ns_st_tdt: tC.internalvars.ns_st_tdt, ns_st_tep: tC.internalvars.ns_st_tep, ns_st_tm: tC.internalvars.ns_st_tm, ns_st_tp: '1', ns_st_tpr: tC.internalvars.ns_st_tpr, ns_st_mp: tc_vars["media_player_name"], ns_st_mv: tc_vars["media_player_version"], ns_st_li: tC.internalvars.media_is_livestream_cs }); } } } }
+    if (tc_array_events["event_id"] == 'init') { if (tc_vars["media_urn"] != '') { if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') { tC.launchTag('einit', 'init - comScore - createPlaybackSession', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.createPlaybackSession(); streamingAnalytics.getPlaybackSession().getAsset(); } } } }
+    if (tc_array_events["event_id"] == 'eof') { if (tc_vars["media_urn"] != '') { tC.launchTag('eeof', 'eof- comScore - createPlaybackSession', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.createPlaybackSession(); streamingAnalytics.getPlaybackSession().getAsset(); } } }
+    if (tc_array_events["event_id"] == 'stop') { if (tc_vars["media_urn"] != '') { tC.launchTag('estop', 'stop - comScore - createPlaybackSession', '-1', '3666', '11'); if ('streamingAnalytics' in window) { streamingAnalytics.createPlaybackSession(); streamingAnalytics.getPlaybackSession().getAsset(); } } }
+    if (tc_array_events["event_id"] == 'segment') { if (tc_vars["media_urn"] != '') { tC.launchTag('esegment', 'segment (new_id)', '-1', '3666', '11'); wt_sendinfo_media(tc_vars["media_urn"], tc_array_events["event_id"], tc_array_events["media_position"], tc_vars["media_segment_length"], '', tc_array_events["media_bandwidth"], tc_array_events["media_volume"], tc_array_events["media_mute"]); } }
+    if (tc_vars["media_type"] == 'Video' || tc_vars["media_type"] == 'video') {
+        if (tc_vars["media_urn"] != '') {
+            if (tc_array_events["event_type"] == 'never true xyz') {
+                tC.launchTag('epeach-player-events', 'Peach - events', '-1', '3666', '11'); var allowedEvents = ["uptime", "eof", "seek", "pos", "play", "pause", "stop"]; if (tc_vars["media_bu_distributer"] === "RTS" && allowedEvents.indexOf(tc_array_events["event_id"]) > -1 && !!tC.getCookie("_pipe_c").length) {
+                    var pipeEventLabels = { "id": tc_vars["media_urn"], "event_timestamp": Date.now(), "props": { "volume": tc_array_events["media_volume"], "playback_position_s": tc_array_events["media_position"] }, "context": { "referrer": document.referrer, "page_uri": location.href, "component": { "type": "player", "name": tc_vars["media_player_name"], "version": tc_vars["media_player_version"] } }, "metadata": { "type": tc_vars["media_type"], "format": tc_array_events["media_stream_type"], "duration": tc_vars["media_episode_length"] } }; if ('') { pipeEventLabels.context.id = "io.ebu.peach:" + ''; }
+                    _pipe('collect', "media_" + tc_array_events["event_id"], pipeEventLabels);
+                }
+            }
+        }
+    }
+}
+    </pre></code>
+    </article>
     <script>
         window.tc_vars = {
             "survey_id": "",
@@ -165,11 +323,13 @@
         };
 
         const player = document.querySelector('video');
+        const span = document.querySelector('span');
         const log = (event, currentTime) => {
             const div = document.querySelector('div');
+            const atomic = event === 'play' ? '💥' : '';
 
             div.innerHTML = `
-            Event[${event.toUpperCase()}]: current time ${currentTime.toFixed(2)} 
+            Event[${event.toUpperCase()}]: current time ${currentTime.toFixed(2)} ${atomic} 
             <br>` + div.innerHTML;
 
             console.log(`Event: ${event.toUpperCase()}`, currentTime.toFixed(2));
@@ -191,6 +351,7 @@
         };
 
         player.addEventListener('play', () => {
+            span.innerHTML = '🐈💨';
             labels.event_id = 'play';
 
             tc_events_11(player, 'play', labels);
@@ -199,6 +360,7 @@
         });
 
         player.addEventListener('pause', () => {
+            span.innerHTML = '🐈';
             labels.event_id = 'pause';
 
             tc_events_11(player, 'pause', labels);
