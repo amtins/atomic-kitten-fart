@@ -1,0 +1,27 @@
+name: Release 
+
+on: [push]
+
+jobs:
+  release:
+    name: Release the Atomic Kitten Fart 💥 🐈 💨
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v1
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Build GitHub Page 🔧
+        run: |
+          npm ci
+          npm run release
+      - name: Deploy GitHub Page 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
