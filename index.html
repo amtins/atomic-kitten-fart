@@ -1,4 +1,158 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Multiple TC Scripts</title><style>body{background:#222;display:flex;flex-direction:column;align-items:center;color:#eee;font-family:Courier New}article,code,div,img,span,video{width:640px}div{height:300px;border:3px solid #dc143c;overflow:auto}div,span{padding:10px;box-sizing:border-box}span{font-size:50px;position:absolute}li{margin:15px 0}pre{overflow:auto}img{margin-top:10px}a{color:#0ff;text-decoration:none}</style><script src="https://www.srf.ch/play/v3/js/tc_SRGGD_31-12.04.js" defer></script><script id="tc_script__1" src="https://tp.srgssr.ch//assets/javascripts/vendor/tagcommander/tc_SRGGD_11.js" defer></script></head><body> <video controls muted poster="https://www.swissinfo.ch/srgscalableimage/40585002/scale/width/700" src="https://media.swissinfo.ch/videos/2017/10/16/40584942_SexworkersEducation_en-40584942-720k.mp4"></video> <span>🐈</span> <div></div> <article> <p><b>Resources:</b></p> <ul> <li>Google drive <a href="https://drive.google.com/file/d/1X5rje5rIdYS1-w54iB1McgugafDurYDK/view">screen capture</a></li> <li>Github repo <a href="https://github.com/amtins/atomic-kitten-fart">💥 🐈💨</a></li> </ul> </article> <article> <h1>[Use case 1] Both libraries loaded</h1> <ol> <li> Open the developer console and select the network tab. </li> <li> In the network tab filter all request that contain <i>wt?</i>. </li> <li> Reload the page. In the network tab the first <i>wt?</i> displayed comes from <i>tc_SRGGD_31-12.04</i> script. </li> <li>Click on play, playback starts. The console above shows only one play event triggered. The kitten state is 🐈💨.</li> <li>Click on pause, playback pauses. The console above shows only one pause event triggered. The kitten state is 🐈.</li> <li>Click on play, then seek few seconds. The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek. When the seek is finished a play (🐈💨) event is triggered. <i>Note that this is the native behavior of the HTML5 player.</i></li> </ol> <p> We can see the difference between the custom console and the network tab. On the custom console, the events are triggered once per event type, while in the network tab, they are triggered at least twice per event type. This is no bueno. 🤔 <br> <img src="https://thumbs.gfycat.com/BlaringGenuineHawaiianmonkseal-small.gif" alt="Not Approved"> </p> </article> <article> <h1>[Use case 2] Only tc_SRGGD_11 library</h1> <ol> <li> Open the developer console and select the network tab. </li> <li> In the network tab, block the url <i>https://www.srf.ch/play/v3/js/tc_SRGGD_31-12.04.js</i> </li> <li> In the network tab filter all request that contain <i>wt?</i> </li> <li>Click on play, playback starts. The console above shows only one play event triggered. The kitten state is 🐈💨.</li> <li>Click on pause, playback pauses. The console above shows only one pause event triggered. The kitten state is 🐈.</li> <li>Click on play, then seek few seconds. The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek. When the seek is finished a play (🐈💨) event is triggered. <i>Note that this is the native behavior of the HTML5 player.</i></li> </ol> <p> We can see the events are triggered correctly. This is bueno. 👌 <br> <img src="https://www.unibetcommunity.com/t5/image/serverpage/image-id/10103i9559312C52D1369D?v=1.0" alt="Approved"> </p> </article> <article> <h1>tc_events_11 with custom log</h1> <code><pre>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple TC Scripts</title>
+
+    <style>
+        body {
+            background: #222;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            color: #eee;
+            font-family: Courier New;
+        }
+
+        video,
+        div,
+        span,
+        article,
+        code,
+        img {
+            width: 640px;
+        }
+
+        div {
+            height: 300px;
+            border: solid crimson 3px;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        span {
+            font-size: 50px;
+            box-sizing: border-box;
+            position: absolute;
+            padding: 10px;
+        }
+
+        li {
+            margin: 15px 0;
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        img {
+            margin-top: 10px;
+        }
+
+        a {
+            color: aqua;
+            text-decoration: none;
+        }
+    </style>
+
+    <script src="tc_SRGGD_31.js" defer></script>
+    <script src="tc_SRGGD_11.js" defer></script>
+</head>
+
+<body>
+    <video controls muted poster="https://www.swissinfo.ch/srgscalableimage/40585002/scale/width/700"
+        src="https://media.swissinfo.ch/videos/2017/10/16/40584942_SexworkersEducation_en-40584942-720k.mp4"></video>
+    <span>🐈</span>
+    <div></div>
+    <article>
+        <p><b>Resources:</b></p>
+        <ul>
+            <li>Google drive <a href="https://drive.google.com/file/d/1X5rje5rIdYS1-w54iB1McgugafDurYDK/view">screen
+                    capture</a></li>
+            <li>Github repo <a href="https://github.com/amtins/atomic-kitten-fart">💥 🐈💨</a></li>
+        </ul>
+    </article>
+    <article>
+        <h1>[Use case 1] Both libraries loaded</h1>
+        <ol>
+            <li>
+                Open the developer console and select the network tab.
+            </li>
+            <li>
+                In the network tab filter all request that contain <i>wt?</i>.
+            </li>
+            <li>
+                Reload the page. In the network tab the first <i>wt?</i> displayed comes from <i>tc_SRGGD_31-12.04</i>
+                script.
+            </li>
+            <li>Click on play, playback starts.
+                The console above shows only one play event triggered.
+                The kitten state is 🐈💨.</li>
+
+            <li>Click on pause, playback pauses.
+                The console above shows only one pause event triggered.
+                The kitten state is 🐈.</li>
+
+            <li>Click on play, then seek few seconds.
+                The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek.
+                When the seek is finished a play (🐈💨) event is triggered.
+                <i>Note that this is the native behavior of the HTML5 player.</i></li>
+        </ol>
+
+        <p>
+            We can see the difference between the custom console and the network tab.
+            On the custom console, the events are triggered once per event type, while in the network tab, they are
+            triggered at least twice per event type.
+            This is no bueno. 🤔
+            <br>
+
+            <img src="https://thumbs.gfycat.com/BlaringGenuineHawaiianmonkseal-small.gif" alt="Not Approved">
+        </p>
+    </article>
+
+    <article>
+        <h1>[Use case 2] Only tc_SRGGD_11 library</h1>
+        <ol>
+            <li>
+                Open the developer console and select the network tab.
+            </li>
+            <li>
+                In the network tab, block the url <i>https://www.srf.ch/play/v3/js/tc_SRGGD_31-12.04.js</i>
+            </li>
+            <li>
+                In the network tab filter all request that contain <i>wt?</i>
+            </li>
+            <li>Click on play, playback starts.
+                The console above shows only one play event triggered.
+                The kitten state is 🐈💨.</li>
+
+            <li>Click on pause, playback pauses.
+                The console above shows only one pause event triggered.
+                The kitten state is 🐈.</li>
+
+            <li>Click on play, then seek few seconds.
+                The console above shows a play (🐈💨) event followed by a pause (🐈) event due to the seek.
+                When the seek is finished a play (🐈💨) event is triggered.
+                <i>Note that this is the native behavior of the HTML5 player.</i></li>
+        </ol>
+
+        <p>
+            We can see the events are triggered correctly.
+            This is bueno. 👌
+            <br>
+            <img src="https://www.unibetcommunity.com/t5/image/serverpage/image-id/10103i9559312C52D1369D?v=1.0"
+                alt="Approved">
+        </p>
+    </article>
+
+    <article>
+        <h1>tc_events_11 with custom log</h1>
+        <code><pre>
 function tc_events_11(tc_elt, tc_id_event, tc_array_events) {
     tc_array_events["id"] = tc_id_event;
     
@@ -52,5 +206,182 @@ function tc_events_11(tc_elt, tc_id_event, tc_array_events) {
         }
     }
 }
-    </pre></code> </article> <script>window.tc_vars={survey_id:"",survey_session_id:"",content_category_concat:"",content_categorization:"",content_channel:"",content_category_1:"",content_category_2:"",content_category_3:"",content_category_4:"",content_id:"",content_template:"",content_tvp_date:"",content_ed_format:"",content_publication_date:"",content_publication_time:"",content_page_elements:"",content_special:"",content_publication_version:"",content_thumbnail:"",content_character_encoding:"",content_production_type:"",content_production_source:"",content_body_character_count:"",content_tags_location:"",content_tags_subject:"",content_author_name:"",page_id_referrer:"",page_id:"",content_page_type:"",content_title:"",content_surtitle:"",content_bu_owner:"",content_language:"",content_title_pretty:"",media_user_elapsed_time:"",media_episode_id_referring:"",media_since_publication_d:"2015",media_since_publication_h:"48361",media_chromecast_selected:!1,media_number_of_segments_total:"1",media_number_of_segment_selected:"1",media_duration_category:"short",media_tv_time:"",media_tv_date:"",media_is_dvr:"",media_dvr_window_length:"",media_dvr_window_offset:"",media_channel_cs:"",media_full_length:"full",media_segment_length:"208",media_is_livestream:"false",media_is_web_only:"true",media_author_name:"",media_episode_length:"208",media_type:"Video",media_is_tvsvizzera:"",media_livestream_encoder:"",media_is_geoblocked:"false",media_assigned_tags:"",media_special:"",media_joker1:"eng",media_joker2:"swissinfo.ch",media_joker3:"",media_player_display:"default",media_url:"https://media.swissinfo.ch/videos/2017/10/16/40584942_SexworkersEducation_en-40584942-720k.mp4",media_thumbnail:"https://www.swissinfo.ch/srgscalableimage/40585002/scale/width/344",media_publication_time:"10:00:00",media_streaming_quality:"HD",media_camera_angle_name:"",media_audio_track:"",media_player_version:"1.5.0",media_bu_owner:"",media_publication_date:"2014-10-09",media_special_format:"DEFAULT",media_player_name:"SRGLetterbox-web",media_publication_datetime:"2014-10-09T10:00:00+02:00",media_language:"eng",media_urn:"urn:swi:video:40584942",media_content_group:"society",media_segment_id:"40584942",media_segment:"Sex workers learn to provide for the disabled",media_episode_id:"40584942",media_episode:"Society on 09.10.2014",media_show_id:"6",media_show:"Society",media_channel_id:"",media_channel_name:"",media_segment_id_referring:"",media_embedding_environment:"",media_embedding_referrer:"",media_embedding_url:"",media_embedding_content_page_type:"",media_tv_id:"",media_bu_distributer:"SWI",navigation_platform:"",navigation_level_8:"",navigation_content_filter:"",navigation_level_2:"",navigation_level_1:"",navigation_app_site_name:"",navigation_bu_distributer:"",navigation_level_7:"",navigation_level_6:"",navigation_level_3:"",navigation_level_4:"",navigation_level_5:"",navigation_environment:"",navigation_property_type:"",user_settings:"",java_script_activated:"",user_id_log_in:"",accessed_after_push_notification:"",accessed_after_click_url:"",srg_mod4:"",srg_mod3:"",srg_mod2:"",srg_mod1:"",search_nb_result:"",search_term:"",http_status_code:"",ab_test_group:"",content_layout_name:"",media_enterprise_units:"SWI",media_production_source:"produced.for.web"};var e=document.querySelector("video"),t=document.querySelector("span"),_=function(e,t){var _=document.querySelector("div"),i="play"===e?"💥":"";_.innerHTML="\n            Event[".concat(e.toUpperCase(),"]: current time ").concat(t.toFixed(2)," ").concat(i," \n            <br>")+_.innerHTML,console.log("Event: ".concat(e.toUpperCase()),t.toFixed(2))},i={event_id:void 0,event_timestamp:(Date.now()/1e3).toFixed(0),media_dvr_window_length:0,media_dvr_window_offset:0,media_is_dvr:!1,media_is_live:!1,media_mute:e.muted?"1":"0",media_position:e.currentTime,media_quality:"HD",media_stream_type:"ondemand",media_subtitles_on:!1,media_volume:(100*e.volume).toFixed(0),navigation_environment:"preprod"};e.addEventListener("play",function(){t.innerHTML="🐈💨",i.event_id="play",tc_events_11(e,"play",i),_("play",e.currentTime)}),e.addEventListener("pause",function(){t.innerHTML="🐈",i.event_id="pause",tc_events_11(e,"pause",i),_("pause",e.currentTime)});</script>
-</body></html>
+    </pre></code>
+    </article>
+    <script>
+        window.tc_vars = {
+            "survey_id": "",
+            "survey_session_id": "",
+            "content_category_concat": "",
+            "content_categorization": "",
+            "content_channel": "",
+            "content_category_1": "",
+            "content_category_2": "",
+            "content_category_3": "",
+            "content_category_4": "",
+            "content_id": "",
+            "content_template": "",
+            "content_tvp_date": "",
+            "content_ed_format": "",
+            "content_publication_date": "",
+            "content_publication_time": "",
+            "content_page_elements": "",
+            "content_special": "",
+            "content_publication_version": "",
+            "content_thumbnail": "",
+            "content_character_encoding": "",
+            "content_production_type": "",
+            "content_production_source": "",
+            "content_body_character_count": "",
+            "content_tags_location": "",
+            "content_tags_subject": "",
+            "content_author_name": "",
+            "page_id_referrer": "",
+            "page_id": "",
+            "content_page_type": "",
+            "content_title": "",
+            "content_surtitle": "",
+            "content_bu_owner": "",
+            "content_language": "",
+            "content_title_pretty": "",
+            "media_user_elapsed_time": "",
+            "media_episode_id_referring": "",
+            "media_since_publication_d": "2015",
+            "media_since_publication_h": "48361",
+            "media_chromecast_selected": false,
+            "media_number_of_segments_total": "1",
+            "media_number_of_segment_selected": "1",
+            "media_duration_category": "short",
+            "media_tv_time": "",
+            "media_tv_date": "",
+            "media_is_dvr": "",
+            "media_dvr_window_length": "",
+            "media_dvr_window_offset": "",
+            "media_channel_cs": "",
+            "media_full_length": "full",
+            "media_segment_length": "208",
+            "media_is_livestream": "false",
+            "media_is_web_only": "true",
+            "media_author_name": "",
+            "media_episode_length": "208",
+            "media_type": "Video",
+            "media_is_tvsvizzera": "",
+            "media_livestream_encoder": "",
+            "media_is_geoblocked": "false",
+            "media_assigned_tags": "",
+            "media_special": "",
+            "media_joker1": "eng",
+            "media_joker2": "swissinfo.ch",
+            "media_joker3": "",
+            "media_player_display": "default",
+            "media_url": "https://media.swissinfo.ch/videos/2017/10/16/40584942_SexworkersEducation_en-40584942-720k.mp4",
+            "media_thumbnail": "https://www.swissinfo.ch/srgscalableimage/40585002/scale/width/344",
+            "media_publication_time": "10:00:00",
+            "media_streaming_quality": "HD",
+            "media_camera_angle_name": "",
+            "media_audio_track": "",
+            "media_player_version": "1.5.0",
+            "media_bu_owner": "",
+            "media_publication_date": "2014-10-09",
+            "media_special_format": "DEFAULT",
+            "media_player_name": "SRGLetterbox-web",
+            "media_publication_datetime": "2014-10-09T10:00:00+02:00",
+            "media_language": "eng",
+            "media_urn": "urn:swi:video:40584942",
+            "media_content_group": "society",
+            "media_segment_id": "40584942",
+            "media_segment": "Sex workers learn to provide for the disabled",
+            "media_episode_id": "40584942",
+            "media_episode": "Society on 09.10.2014",
+            "media_show_id": "6",
+            "media_show": "Society",
+            "media_channel_id": "",
+            "media_channel_name": "",
+            "media_segment_id_referring": "",
+            "media_embedding_environment": "",
+            "media_embedding_referrer": "",
+            "media_embedding_url": "",
+            "media_embedding_content_page_type": "",
+            "media_tv_id": "",
+            "media_bu_distributer": "SWI",
+            "navigation_platform": "",
+            "navigation_level_8": "",
+            "navigation_content_filter": "",
+            "navigation_level_2": "",
+            "navigation_level_1": "",
+            "navigation_app_site_name": "",
+            "navigation_bu_distributer": "",
+            "navigation_level_7": "",
+            "navigation_level_6": "",
+            "navigation_level_3": "",
+            "navigation_level_4": "",
+            "navigation_level_5": "",
+            "navigation_environment": "",
+            "navigation_property_type": "",
+            "user_settings": "",
+            "java_script_activated": "",
+            "user_id_log_in": "",
+            "accessed_after_push_notification": "",
+            "accessed_after_click_url": "",
+            "srg_mod4": "",
+            "srg_mod3": "",
+            "srg_mod2": "",
+            "srg_mod1": "",
+            "search_nb_result": "",
+            "search_term": "",
+            "http_status_code": "",
+            "ab_test_group": "",
+            "content_layout_name": "",
+            "media_enterprise_units": "SWI",
+            "media_production_source": "produced.for.web"
+        };
+
+        const player = document.querySelector('video');
+        const span = document.querySelector('span');
+        const log = (event, currentTime) => {
+            const div = document.querySelector('div');
+            const atomic = event === 'play' ? '💥' : '';
+
+            div.innerHTML = `
+            Event[${event.toUpperCase()}]: current time ${currentTime.toFixed(2)} ${atomic} 
+            <br>` + div.innerHTML;
+
+            console.log(`Event: ${event.toUpperCase()}`, currentTime.toFixed(2));
+        };
+        const labels = {
+            event_id: undefined,
+            event_timestamp: (Date.now() / 1000).toFixed(0),
+            media_dvr_window_length: 0,
+            media_dvr_window_offset: 0,
+            media_is_dvr: false,
+            media_is_live: false,
+            media_mute: player.muted ? '1' : '0',
+            media_position: player.currentTime,
+            media_quality: "HD",
+            media_stream_type: "ondemand",
+            media_subtitles_on: false,
+            media_volume: (player.volume * 100).toFixed(0),
+            navigation_environment: "preprod",
+        };
+
+        player.addEventListener('play', () => {
+            span.innerHTML = '🐈💨';
+            labels.event_id = 'play';
+
+            tc_events_11(player, 'play', labels);
+
+            log('play', player.currentTime);
+        });
+
+        player.addEventListener('pause', () => {
+            span.innerHTML = '🐈';
+            labels.event_id = 'pause';
+
+            tc_events_11(player, 'pause', labels);
+
+            log('pause', player.currentTime);
+        });
+    </script>
+</body>
+
+</html>
